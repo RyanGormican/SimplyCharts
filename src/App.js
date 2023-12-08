@@ -9,11 +9,20 @@ function App() {
   const [DataLabel, setDataLabel] = useState('Sample Data Label');
   const [datasetSize, setDatasetSize] = useState(3);
   const [datasetValues, setDatasetValues] = useState(Array.from({ length: datasetSize }, (_, index) => index + 1));
-
+  const [datasetLabels, setDatasetLabels] = useState(Array.from({ length: datasetSize }, (_, index) => ``));
   const handleSizeChange = (increment) => {
     const newSize = Math.max(1, Math.min(10, datasetSize + increment));
     setDatasetSize(newSize);
-    setDatasetValues(Array.from({ length: newSize }, (_, index) => (index < datasetSize ? datasetValues[index] : index + 1)));
+setDatasetValues((prevValues) =>
+    Array.from({ length: newSize }, (_, index) =>
+      index < datasetSize ? prevValues[index] : 0
+    )
+  );
+     setDatasetLabels((prevLabels) =>
+    Array.from({ length: newSize }, (_, index) =>
+      index < datasetSize ? prevLabels[index] : ''
+    )
+  );
   };
 
   const handleValueChange = (index, value) => {
@@ -21,13 +30,17 @@ function App() {
     newValues[index] = parseInt(value) || 0;
     setDatasetValues(newValues);
   };
-
+  const handleLabelChange = (index, label) => {
+  const newLabels = [...datasetLabels];
+  newLabels[index] = label;
+  setDatasetLabels(newLabels);
+};
   const fetchChart = async () => {
     try {
       const chartData = {
         type: 'bar',
         data: {
-          labels: Array.from({ length: datasetSize }, (_, index) => index + 1),
+          labels: datasetLabels,
           datasets: [
             {
               label: DataLabel,
@@ -104,6 +117,18 @@ function App() {
               />
             </label>
           ))}
+          </div>
+          <div>
+          {datasetValues.map((value, index) => (
+  <label key={index}>
+    Label {index + 1}
+    <input
+      type="text"
+      value={datasetLabels[index]}
+      onChange={(e) => handleLabelChange(index, e.target.value)}
+    />
+  </label>
+))}
           </div>
           <div>
           <label>
