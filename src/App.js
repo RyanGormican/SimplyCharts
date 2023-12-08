@@ -6,17 +6,32 @@ function App() {
   const [chartData, setChartData] = useState(null);
   const [showTitle, setShowTitle] = useState(true);
   const [titleText, setTitleText] = useState('Sample Title');
-  const [primarydataLabel, setPrimaryDataLabel] = useState('Sample Data Label')
+  const [DataLabel, setDataLabel] = useState('Sample Data Label');
+  const [datasetSize, setDatasetSize] = useState(3);
+  const [datasetValues, setDatasetValues] = useState(Array.from({ length: datasetSize }, (_, index) => index + 1));
+
+  const handleSizeChange = (increment) => {
+    const newSize = Math.max(1, Math.min(10, datasetSize + increment));
+    setDatasetSize(newSize);
+    setDatasetValues(Array.from({ length: newSize }, (_, index) => (index < datasetSize ? datasetValues[index] : index + 1)));
+  };
+
+  const handleValueChange = (index, value) => {
+    const newValues = [...datasetValues];
+    newValues[index] = parseInt(value) || 0;
+    setDatasetValues(newValues);
+  };
+
   const fetchChart = async () => {
     try {
       const chartData = {
         type: 'bar',
         data: {
-          labels: [1, 2, 3],
+          labels: Array.from({ length: datasetSize }, (_, index) => index + 1),
           datasets: [
             {
-              label: primarydataLabel,
-              data: [1, 2, 3],
+              label: DataLabel,
+              data: datasetValues,
             },
           ],
         },
@@ -55,20 +70,42 @@ function App() {
           </a>
         </div>
 
-         <div>
+        <div className="chart-controls">
+        <div>
           <label>
             Primary Data Label
+            <input
+              type="text"
+              value={DataLabel}
+              onChange={(e) => setDataLabel(e.target.value)}
+            />
+          </label>
+         </div>
+         <div>
+          <label>
+            Dataset Size
+            <button type="button" onClick={() => handleSizeChange(-1)}>
+              <Icon icon="ic:baseline-minus" />
+            </button>
+            {datasetSize}
+            <button type="button" onClick={() => handleSizeChange(1)}>
+              <Icon icon="ic:baseline-plus" />
+            </button>
+          </label>
+
+          {datasetValues.map((value, index) => (
+            <label key={index}>
+              Value {index + 1}
               <input
-                type="text"
-                value={primarydataLabel}
-                onChange={(e) => setTitleText(e.target.value)}
+                type="number"
+                value={value}
+                onChange={(e) => handleValueChange(index, e.target.value)}
+                className="small-input"
               />
-        </label>
-              </div>
-
-        <div className="chart-controls">
-
-
+            </label>
+          ))}
+          </div>
+          <div>
           <label>
             Title
             <input
@@ -77,10 +114,9 @@ function App() {
               onChange={() => setShowTitle(!showTitle)}
             />
           </label>
-         
+
           {showTitle && (
             <label>
-             
               <input
                 type="text"
                 value={titleText}
@@ -88,11 +124,13 @@ function App() {
               />
             </label>
           )}
-             <div className="button-container">
-          <button type="button" className="btn btn-primary" onClick={fetchChart}>
-            Create Chart
-          </button>
           </div>
+          <div className="button-container">
+            <button type="button" className="btn btn-primary" onClick={fetchChart}>
+              Create Chart
+            </button>
+          </div>
+
           {chartData && (
             <div className="chart-container">
               <img src={chartData} alt="Chart" />
