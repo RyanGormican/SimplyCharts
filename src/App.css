@@ -23,7 +23,15 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+.links {
+  display: flex;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  height: 10vh; 
+  z-index:5;
 
+}
 .App-link {
   color: #61dafb;
 }
