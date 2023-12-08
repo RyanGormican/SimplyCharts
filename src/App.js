@@ -4,12 +4,12 @@ import { Icon } from '@iconify/react';
 function App() {
   const [chartData, setChartData] = useState(null);
 
-  useEffect(() => {
-    const fetchChart = async () => {
+   const fetchChart = async () => {
       try {
-        const response = await fetch(
-          'https://quickchart.io/chart?c={type:\'bar\',data:{labels:[1,2,3],datasets:[{label:\'Test\',data:[1,2,3]}]}}'
-        );
+     const response = await fetch(
+  'https://quickchart.io/chart?c={type:\'bar\',data:{labels:[1,2,3],datasets:[{label:\'Test\',data:[1,2,3]}],options:{title:{display:true,text:\'Your Title Here\'}}}}'
+);
+
          const blob = await response.blob();
         const imageUrl = URL.createObjectURL(blob);
         setChartData(imageUrl);
@@ -18,8 +18,7 @@ function App() {
       }
     };
 
-    fetchChart();
-  }, []); 
+
   return (
     <div className="App">
       <header className="App-header">
@@ -34,7 +33,9 @@ function App() {
             <Icon icon="teenyicons:computer-outline" color="#199c35" width="60" />
           </a>
         </div>
-
+         <button type="button" className="btn btn-primary" onClick={fetchChart}>
+         Create Chart
+         </button>
          {chartData && (
           <div className="chart-container">
             <img src={chartData} alt="Chart" />
