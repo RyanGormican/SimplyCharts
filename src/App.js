@@ -8,14 +8,14 @@ function App() {
   const [titleText, setTitleText] = useState('Sample Title');
   const [DataLabel, setDataLabel] = useState('Sample Data Label');
   const [datasetSize, setDatasetSize] = useState(3);
-  const [datasetValues, setDatasetValues] = useState(Array.from({ length: datasetSize }, (_, index) => index + 1));
+  const [datasetValues, setDatasetValues] = useState(Array.from({ length: datasetSize }, (_, index) => 1));
   const [datasetLabels, setDatasetLabels] = useState(Array.from({ length: datasetSize }, (_, index) => ``));
   const handleSizeChange = (increment) => {
     const newSize = Math.max(1, Math.min(10, datasetSize + increment));
     setDatasetSize(newSize);
 setDatasetValues((prevValues) =>
     Array.from({ length: newSize }, (_, index) =>
-      index < datasetSize ? prevValues[index] : 0
+      index < datasetSize ? prevValues[index] : 1
     )
   );
      setDatasetLabels((prevLabels) =>
@@ -26,10 +26,13 @@ setDatasetValues((prevValues) =>
   };
 
   const handleValueChange = (index, value) => {
-    const newValues = [...datasetValues];
-    newValues[index] = parseInt(value) || 0;
+  const newValues = [...datasetValues];
+  const isValidInput = /^-?\d*\.?\d*$/.test(value);
+  if (isValidInput) {
+    newValues[index] = value === '' ? '' : parseFloat(value);
     setDatasetValues(newValues);
-  };
+  }
+};
   const handleLabelChange = (index, label) => {
   const newLabels = [...datasetLabels];
   newLabels[index] = label;
@@ -82,7 +85,9 @@ setDatasetValues((prevValues) =>
             <Icon icon="teenyicons:computer-outline" color="#199c35" width="60" />
           </a>
         </div>
-
+        <div className="title">
+        SimplyCharts
+        </div>
         <div className="chart-controls">
         <div>
           <label>
@@ -111,7 +116,8 @@ setDatasetValues((prevValues) =>
               Value {index + 1}
               <input
                 type="number"
-                value={value}
+                step="any"
+                value={value === '' ? '' : value}
                 onChange={(e) => handleValueChange(index, e.target.value)}
                 className="small-input"
               />
