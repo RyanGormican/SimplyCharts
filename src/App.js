@@ -4,7 +4,7 @@ import { Icon } from '@iconify/react';
 
 function App() {
   const [chartData, setChartData] = useState(null);
-  const [showTitle, setShowTitle] = useState(true);
+  const [showTitle, setShowTitle] = useState(false);
   const [titleText, setTitleText] = useState('Sample Title');
   const [DataLabel, setDataLabel] = useState('Sample Data Label');
   const [datasetSize, setDatasetSize] = useState(3);
