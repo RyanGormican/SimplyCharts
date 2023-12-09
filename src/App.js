@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import './App.css';
 import { Icon } from '@iconify/react';
-
 function App() {
   const [chartData, setChartData] = useState(null);
   const [showTitle, setShowTitle] = useState(false);
   const [titleText, setTitleText] = useState('Sample Title');
   const [DataLabel, setDataLabel] = useState('Sample Data Label');
-  const [chartType, setchartType] = useState('bar');
+  const [chartType, setChartType] = useState('bar');
   const [datasetSize, setDatasetSize] = useState(3);
   const [datasetValues, setDatasetValues] = useState(Array.from({ length: datasetSize }, (_, index) => 1));
   const [datasetLabels, setDatasetLabels] = useState(Array.from({ length: datasetSize }, (_, index) => ``));
@@ -90,14 +89,14 @@ setDatasetValues((prevValues) =>
         SimplyCharts
         </div>
         <div className="chart-controls">
-        <div>
-         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-  {chartType}
+        <div  class="btn-group">
+         <button type="button" class="btn btn-primary dropdown-toggle"  data-bs-toggle="dropdown"  aria-haspopup="true" aria-expanded="false">
+   {chartType.charAt(0).toUpperCase() + chartType.slice(1)}
   </button>
-  <div class="dropdown-menu">
-    <a class="dropdown-item" href="#">Bar</a>
-    <a class="dropdown-item" href="#">Pie</a>
-    <a class="dropdown-item" href="#">Line</a>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <a class="dropdown-item"  onClick={() => setChartType('bar')}href="#">Bar</a>
+    <a class="dropdown-item"  onClick={() => setChartType('pie')} href="#">Pie</a>
+    <a class="dropdown-item"  onClick={() => setChartType('line')}href="#">Line</a>
   </div>
         </div>
         <div>
