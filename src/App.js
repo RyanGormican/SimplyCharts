@@ -10,6 +10,10 @@ function App() {
   const [titleText, setTitleText] = useState('Sample Title');
   const [DataLabel, setDataLabel] = useState('Sample Data Label');
   const [chartType, setChartType] = useState('bar');
+  const [showYAxis, setShowYAxis] = useState(true);
+  const [showXAxis, setShowXAxis] = useState(true);
+  const [yAxisLabel, setyAxisLabel] = useState('');
+  const [xAxisLabel, setxAxisLabel] = useState('');
   const [datasetValues, setDatasetValues] = useState(Array.from({ length: datasetSize }, (_, index) => 1));
   const [datasetLabels, setDatasetLabels] = useState(Array.from({ length: datasetSize }, (_, index) => ``));
   const handleSizeChange = (increment) => {
@@ -25,10 +29,10 @@ setDatasetValues((prevValues) =>
       index < datasetSize ? prevLabels[index] : ''
     )
   );
-  console.log(initialColors);
+  console.log(backgroundColor);
 setBackgroundColor((prevColors) =>
   Array.from({ length: newSize }, (_, index) =>
-    index < prevColors.length ? prevColors[index] : chartType === 'bar' || chartType === 'line' || chartType === 'horizontalBar' ? backgroundColor[0] : backgroundColor[0]
+    index < prevColors.length ? prevColors[index] : chartType === 'bar' || chartType === 'horizontalBar' ? backgroundColor[0] : ''
   )
 );
  
@@ -54,43 +58,74 @@ const handleColorChange = (index, color) => {
 };
 const handleChartTypeChange = (newChartType) => {
   setChartType(newChartType);
-  if (newChartType !== 'pie') {
-  setBackgroundColor(Array.from({ length: datasetSize }, () => initialColors[0]));
+ if (newChartType == 'line') {
+    setBackgroundColor([backgroundColor[0]]);
+  } else {
+    setBackgroundColor(Array.from({ length: datasetSize }, () => backgroundColor[0]));
+      setShowXAxis(true);
+        setShowYAxis(true);
+  }
+  if (newChartType == 'pie'){
+        setyAxisLabel('');
+        setxAxisLabel('');
+        setShowXAxis(false);
+        setShowYAxis(false);
   }
 };
-  const fetchChart = async () => {
-    try {
-      const chartData = {
-        type: chartType,
-        data: {
-          labels: datasetLabels,
-          datasets: [
+const fetchChart = async () => {
+  try {
+    const chartData = {
+      type: chartType,
+      data: {
+        labels: datasetLabels,
+        datasets: [
+          {
+            backgroundColor: backgroundColor,
+            label: DataLabel,
+            data: datasetValues,
+            fill: false,
+          },
+        ],
+      },
+      options: {
+        title: {
+          display: showTitle,
+          text: titleText,
+        },
+        scales: {
+          xAxes: [
             {
-              backgroundColor: backgroundColor,
-              label: DataLabel,
-              data: datasetValues,
+              display: showXAxis,
+              scaleLabel: {
+                display: true,
+                labelString: xAxisLabel,
+              },
+            },
+          ],
+          yAxes: [
+            {
+              display: showYAxis,
+              scaleLabel: {
+                display: true,
+                labelString: yAxisLabel,
+                },
             },
           ],
         },
-        options: {
-          title: {
-            display: showTitle,
-            text: titleText,
-          },
-        },
-      };
+      },
+    };
 
-      const chartDataString = encodeURIComponent(JSON.stringify(chartData));
-      const apiUrl = `https://quickchart.io/chart?c=${chartDataString}`;
+    const chartDataString = encodeURIComponent(JSON.stringify(chartData));
+    const apiUrl = `https://quickchart.io/chart?c=${chartDataString}`;
 
-      const response = await fetch(apiUrl);
-      const blob = await response.blob();
-      const imageUrl = URL.createObjectURL(blob);
-      setChartData(imageUrl);
-    } catch (error) {
-      console.error('Error fetching chart data:', error);
-    }
-  };
+    const response = await fetch(apiUrl);
+    const blob = await response.blob();
+    const imageUrl = URL.createObjectURL(blob);
+    setChartData(imageUrl);
+  } catch (error) {
+    console.error('Error fetching chart data:', error);
+  }
+};
 
   return (
     <div className="App">
@@ -159,33 +194,76 @@ Formation Values
             </label>
           )}
           </div>
-        {chartType !== 'pie' ? (
-        <div>
+     {chartType !== 'pie' ? (
+  <div>
+  <div>
+  <div>
+    <label>
+      Y-Axis
+      <input
+        type="checkbox"
+        checked={showYAxis}
+        onChange={() => setShowYAxis(!showYAxis)}
+      />
+    </label>
+
+    {showYAxis && (
+      <label>
+        <input
+          type="text"
+          value={yAxisLabel}
+          onChange={(e) => setyAxisLabel(e.target.value)}
+        />
+      </label>
+    )}
+    </div>
     <div>
-          <label>
-            Primary Data Label
-            <input
-              type="text"
-              value={DataLabel}
-              onChange={(e) => setDataLabel(e.target.value)}
-            />
-          </label>
-         </div>
-<div>
-  <label>
-    Primary Data Color
-    <input
-      type="color"
-      value={backgroundColor[0]}  
-      onChange={(e) => {
-        const newColor = e.target.value;
-        setBackgroundColor(Array.from({ length: datasetSize }, () => newColor));
-      }}
-    />
-  </label>
+    <label>
+      X-Axis
+      <input
+        type="checkbox"
+        checked={showXAxis}
+        onChange={() => setShowXAxis(!showXAxis)}
+      />
+    </label>
+
+    {showXAxis && (
+      <label>
+        <input
+          type="text"
+          value={xAxisLabel}
+          onChange={(e) => setxAxisLabel(e.target.value)}
+        />
+      </label>
+    )}
+    </div>
+    <div>
+    <label>
+      Primary Data Label
+      <input
+        type="text"
+        value={DataLabel}
+        onChange={(e) => setDataLabel(e.target.value)}
+      />
+    </label>
 </div>
-</div>
-        ):( "")}
+
+
+    <label>
+      Primary Data Color
+      <input
+        type="color"
+        value={backgroundColor[0]}
+        onChange={(e) => {
+          const newColor = e.target.value;
+          setBackgroundColor(Array.from({ length: datasetSize }, () => newColor));
+        }}
+      />
+    </label>
+    </div>
+  </div>
+) : null}
+
         </div>
         </div>
     <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#datasetCollapse" aria-expanded="false" aria-controls="datasetCollapse" style={{ width: '80vw',border: '2px solid #ffffff'}}>
