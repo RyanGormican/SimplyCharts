@@ -110,8 +110,13 @@ const handleChartTypeChange = (newChartType) => {
         SimplyCharts
         </div>
         <div className="chart-controls">
+           <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#valuesCollapse" aria-expanded="true" aria-controls="datasetCollapse" style={{ width: '80vw',}}>
+Values
+  </button>
+  <div class="collapse" id="valuesCollapse">
+  <div class = "card card-body" style= {{backgroundColor: '#282c34'}}>
         <div  class="btn-group">
-         <button type="button" class="btn btn-primary dropdown-toggle btn-lg"  data-bs-toggle="dropdown"  aria-haspopup="true" aria-expanded="false">
+         <button type="button" class="btn btn-primary dropdown-toggle btn-lg"  data-bs-toggle="dropdown"  aria-haspopup="true" aria-expanded="false" >
    {chartType.charAt(0).toUpperCase() + chartType.slice(1)}
   </button>
   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -167,6 +172,13 @@ const handleChartTypeChange = (newChartType) => {
 </div>
 </div>
         ):( "")}
+        </div>
+        </div>
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#datasetCollapse" aria-expanded="true" aria-controls="datasetCollapse" style={{ width: '80vw',}}>
+Dataset
+  </button>
+  <div class="collapse" id="datasetCollapse">
+  <div class = "card card-body" style= {{backgroundColor: '#282c34'}}>
          <div>
           <label>
             Dataset Size
@@ -207,7 +219,7 @@ const handleChartTypeChange = (newChartType) => {
           </div>
           <div>
            {chartType === 'pie' && (
-          <div className="color-picker">
+          <div className="dataset">
             {backgroundColor.map((color, index) => (
               <label key={index}>
                 Color {index + 1}
@@ -221,7 +233,8 @@ const handleChartTypeChange = (newChartType) => {
           </div>
         )}
           </div>
-        
+          </div>
+        </div>
           <div className="button-container">
             <button type="button" className="btn btn-primary" onClick={fetchChart}>
               Create Chart
