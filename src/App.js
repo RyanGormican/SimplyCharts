@@ -28,7 +28,7 @@ setDatasetValues((prevValues) =>
   console.log(initialColors);
 setBackgroundColor((prevColors) =>
   Array.from({ length: newSize }, (_, index) =>
-    index < prevColors.length ? prevColors[index] : chartType === 'bar' || chartType === 'line' ? backgroundColor[0] : backgroundColor[0]
+    index < prevColors.length ? prevColors[index] : chartType === 'bar' || chartType === 'line' || chartType === 'horizontalBar' ? backgroundColor[0] : backgroundColor[0]
   )
 );
  
@@ -54,8 +54,8 @@ const handleColorChange = (index, color) => {
 };
 const handleChartTypeChange = (newChartType) => {
   setChartType(newChartType);
-  if (newChartType === 'bar' || newChartType === 'line') {
-  setBackgroundColor(Array.from({ length: datasetSize }, () => [initialColors[0]]));
+  if (newChartType !== 'pie') {
+  setBackgroundColor(Array.from({ length: datasetSize }, () => initialColors[0]));
   }
 };
   const fetchChart = async () => {
@@ -117,13 +117,27 @@ Formation Values
   <div class = "card card-body d-flex mx-auto" style= {{backgroundColor: '#282c34', border: '2px solid #ffffff', maxWidth:'80vw'}}>
         <div  class="btn-group d-flex mx-auto">
          <button type="button" class="btn btn-primary dropdown-toggle chart-type-btn"  data-bs-toggle="dropdown"  aria-haspopup="true" aria-expanded="false" style={{ width: '5vw', border: '2px solid #ffffff' }}>
-   {chartType.charAt(0).toUpperCase() + chartType.slice(1)}
+      {chartType !== 'bar' && chartType !== 'horizontalBar' ? (
+      <div>
+         {chartType.charAt(0).toUpperCase() + chartType.slice(1)}
+      </div>
+      ) : (
+      <div>
+      {chartType === 'bar' ? (
+      <p> Vertical Bar </p>
+      ) : (
+     <p> Horizontal Bar </p>
+      )}
+    </div>
+      )}
+      
   </button>
   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-    <a class="dropdown-item"  onClick={() => handleChartTypeChange('bar')}href="#">Bar</a>
+    <a class="dropdown-item"  onClick={() => handleChartTypeChange('bar')}href="#">Vertical Bar</a>
+    <a class="dropdown-item"  onClick={() => handleChartTypeChange('horizontalBar')}href="#">Horizontal Bar</a>
     <a class="dropdown-item"  onClick={() => handleChartTypeChange('pie')} href="#">Pie</a>
-    <a class="dropdown-item"  onClick={() => handleChartTypeChange('line')}href="#">Line</a>
-  </div>
+    <a class="dropdown-item"  onClick={() => handleChartTypeChange('line')}href="#">Line</a><
+  /div>
         </div>
           <div>
           <label>
