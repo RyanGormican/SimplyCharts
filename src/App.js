@@ -4,6 +4,7 @@ import { Icon } from '@iconify/react';
 function App() {
   const [chartData, setChartData] = useState(null);
   const [showTitle, setShowTitle] = useState(false);
+  const [backgroundColor, setBackgroundColor] = useState(['#34baeb']);
   const [titleText, setTitleText] = useState('Sample Title');
   const [DataLabel, setDataLabel] = useState('Sample Data Label');
   const [chartType, setChartType] = useState('bar');
@@ -11,7 +12,7 @@ function App() {
   const [datasetValues, setDatasetValues] = useState(Array.from({ length: datasetSize }, (_, index) => 1));
   const [datasetLabels, setDatasetLabels] = useState(Array.from({ length: datasetSize }, (_, index) => ``));
   const handleSizeChange = (increment) => {
-    const newSize = Math.max(1, Math.min(10, datasetSize + increment));
+    const newSize = Math.max(1, Math.min(15, datasetSize + increment));
     setDatasetSize(newSize);
 setDatasetValues((prevValues) =>
     Array.from({ length: newSize }, (_, index) =>
@@ -46,6 +47,7 @@ setDatasetValues((prevValues) =>
           labels: datasetLabels,
           datasets: [
             {
+              backgroundColor: backgroundColor,
               label: DataLabel,
               data: datasetValues,
             },
@@ -90,7 +92,7 @@ setDatasetValues((prevValues) =>
         </div>
         <div className="chart-controls">
         <div  class="btn-group">
-         <button type="button" class="btn btn-primary dropdown-toggle"  data-bs-toggle="dropdown"  aria-haspopup="true" aria-expanded="false">
+         <button type="button" class="btn btn-primary dropdown-toggle btn-lg"  data-bs-toggle="dropdown"  aria-haspopup="true" aria-expanded="false">
    {chartType.charAt(0).toUpperCase() + chartType.slice(1)}
   </button>
   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -109,6 +111,18 @@ setDatasetValues((prevValues) =>
             />
           </label>
          </div>
+        {chartType !== 'pie' ? (
+        <div>
+            <label>
+            Primary Data Color
+            <input
+              type="color"
+              value={backgroundColor}
+              onChange={(e) => setBackgroundColor(e.target.value)}
+            />
+          </label>
+        </div>
+        ):( "")}
          <div>
           <label>
             Dataset Size
@@ -120,7 +134,8 @@ setDatasetValues((prevValues) =>
               <Icon icon="ic:baseline-plus" />
             </button>
           </label>
-
+          </div>
+          <div class="dataset">
           {datasetValues.map((value, index) => (
             <label key={index}>
               Value {index + 1}
@@ -134,7 +149,7 @@ setDatasetValues((prevValues) =>
             </label>
           ))}
           </div>
-          <div>
+          <div class="dataset">
           {datasetValues.map((value, index) => (
   <label key={index}>
     Label {index + 1}

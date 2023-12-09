@@ -35,7 +35,12 @@
   z-index:5;
 
 }
-
+.dataset{
+max-width:80vw;
+display:flex;
+overflow-x:auto;
+flex-direction:row;
+}
 .small-input {
 }
 .App-link {
