@@ -25,6 +25,8 @@
 }
 .title{
     font-size: 50px;
+    top: 10px;
+    position:fixed;
 }
 .links {
   display: flex;
