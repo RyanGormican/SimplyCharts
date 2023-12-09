@@ -4,11 +4,12 @@ import { Icon } from '@iconify/react';
 function App() {
   const [chartData, setChartData] = useState(null);
   const [showTitle, setShowTitle] = useState(false);
-  const [backgroundColor, setBackgroundColor] = useState(['#34baeb']);
+  const [datasetSize, setDatasetSize] = useState(3);
+  const initialColors = ['#34baeb', '#34baec', '#34baed']; 
+  const [backgroundColor, setBackgroundColor] = useState(initialColors.slice(0, datasetSize));
   const [titleText, setTitleText] = useState('Sample Title');
   const [DataLabel, setDataLabel] = useState('Sample Data Label');
   const [chartType, setChartType] = useState('bar');
-  const [datasetSize, setDatasetSize] = useState(3);
   const [datasetValues, setDatasetValues] = useState(Array.from({ length: datasetSize }, (_, index) => 1));
   const [datasetLabels, setDatasetLabels] = useState(Array.from({ length: datasetSize }, (_, index) => ``));
   const handleSizeChange = (increment) => {
@@ -24,6 +25,13 @@ setDatasetValues((prevValues) =>
       index < datasetSize ? prevLabels[index] : ''
     )
   );
+  console.log(initialColors);
+setBackgroundColor((prevColors) =>
+  Array.from({ length: newSize }, (_, index) =>
+    index < prevColors.length ? prevColors[index] : chartType === 'bar' || chartType === 'line' ? backgroundColor[0] : '#34baeb'
+  )
+);
+ 
   };
 
   const handleValueChange = (index, value) => {
@@ -38,6 +46,17 @@ setDatasetValues((prevValues) =>
   const newLabels = [...datasetLabels];
   newLabels[index] = label;
   setDatasetLabels(newLabels);
+};
+const handleColorChange = (index, color) => {
+  const newColors = [...backgroundColor];
+  newColors[index] = color.startsWith('#') ? color : `#${color}`;
+  setBackgroundColor(newColors);
+};
+const handleChartTypeChange = (newChartType) => {
+  setChartType(newChartType);
+  if (newChartType === 'bar' || newChartType === 'line') {
+    setBackgroundColor([initialColors[0]]);
+  }
 };
   const fetchChart = async () => {
     try {
@@ -96,12 +115,34 @@ setDatasetValues((prevValues) =>
    {chartType.charAt(0).toUpperCase() + chartType.slice(1)}
   </button>
   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-    <a class="dropdown-item"  onClick={() => setChartType('bar')}href="#">Bar</a>
-    <a class="dropdown-item"  onClick={() => setChartType('pie')} href="#">Pie</a>
-    <a class="dropdown-item"  onClick={() => setChartType('line')}href="#">Line</a>
+    <a class="dropdown-item"  onClick={() => handleChartTypeChange('bar')}href="#">Bar</a>
+    <a class="dropdown-item"  onClick={() => handleChartTypeChange('pie')} href="#">Pie</a>
+    <a class="dropdown-item"  onClick={() => handleChartTypeChange('line')}href="#">Line</a>
   </div>
         </div>
+          <div>
+          <label>
+            Title
+            <input
+              type="checkbox"
+              checked={showTitle}
+              onChange={() => setShowTitle(!showTitle)}
+            />
+          </label>
+
+          {showTitle && (
+            <label>
+              <input
+                type="text"
+                value={titleText}
+                onChange={(e) => setTitleText(e.target.value)}
+              />
+            </label>
+          )}
+          </div>
+        {chartType !== 'pie' ? (
         <div>
+    <div>
           <label>
             Primary Data Label
             <input
@@ -111,17 +152,20 @@ setDatasetValues((prevValues) =>
             />
           </label>
          </div>
-        {chartType !== 'pie' ? (
-        <div>
-            <label>
-            Primary Data Color
-            <input
-              type="color"
-              value={backgroundColor}
-              onChange={(e) => setBackgroundColor(e.target.value)}
-            />
-          </label>
-        </div>
+<div>
+  <label>
+    Primary Data Color
+    <input
+      type="color"
+      value={backgroundColor[0]}  
+      onChange={(e) => {
+        const newColor = e.target.value;
+        setBackgroundColor(Array.from({ length: datasetSize }, () => newColor));
+      }}
+    />
+  </label>
+</div>
+</div>
         ):( "")}
          <div>
           <label>
@@ -162,25 +206,22 @@ setDatasetValues((prevValues) =>
 ))}
           </div>
           <div>
-          <label>
-            Title
-            <input
-              type="checkbox"
-              checked={showTitle}
-              onChange={() => setShowTitle(!showTitle)}
-            />
-          </label>
-
-          {showTitle && (
-            <label>
-              <input
-                type="text"
-                value={titleText}
-                onChange={(e) => setTitleText(e.target.value)}
-              />
-            </label>
-          )}
+           {chartType === 'pie' && (
+          <div className="color-picker">
+            {backgroundColor.map((color, index) => (
+              <label key={index}>
+                Color {index + 1}
+                <input
+                  type="color"
+                  value={color}
+                  onChange={(e) => handleColorChange(index, e.target.value)}
+                />
+              </label>
+            ))}
           </div>
+        )}
+          </div>
+        
           <div className="button-container">
             <button type="button" className="btn btn-primary" onClick={fetchChart}>
               Create Chart
