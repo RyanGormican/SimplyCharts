@@ -111,10 +111,10 @@ const handleChartTypeChange = (newChartType) => {
         </div>
         <div className="chart-controls">
            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#valuesCollapse" aria-expanded="false" aria-controls="datasetCollapse" style={{ width: '80vw',border: '2px solid #ffffff'}}>
-Values
+Formation Values
   </button>
   <div class="collapse show" id="valuesCollapse">
-  <div class = "card card-body" style= {{backgroundColor: '#282c34', border: '2px solid #ffffff', maxWidth:'80vw'}}>
+  <div class = "card card-body d-flex mx-auto" style= {{backgroundColor: '#282c34', border: '2px solid #ffffff', maxWidth:'80vw'}}>
         <div  class="btn-group d-flex mx-auto">
          <button type="button" class="btn btn-primary dropdown-toggle chart-type-btn"  data-bs-toggle="dropdown"  aria-haspopup="true" aria-expanded="false" style={{ width: '5vw', border: '2px solid #ffffff' }}>
    {chartType.charAt(0).toUpperCase() + chartType.slice(1)}
@@ -175,10 +175,10 @@ Values
         </div>
         </div>
     <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#datasetCollapse" aria-expanded="false" aria-controls="datasetCollapse" style={{ width: '80vw',border: '2px solid #ffffff'}}>
-Dataset
+Dataset Values
   </button>
   <div class="collapse show" id="datasetCollapse">
-  <div class = "card card-body" style= {{backgroundColor: '#282c34', border: '2px solid #ffffff', maxWidth:'80vw'}}>
+  <div class = "card card-body  d-flex mx-auto" style= {{backgroundColor: '#282c34', border: '2px solid #ffffff', maxWidth:'80vw'}}>
          <div>
           <label>
             Dataset Size
