@@ -28,7 +28,7 @@ setDatasetValues((prevValues) =>
   console.log(initialColors);
 setBackgroundColor((prevColors) =>
   Array.from({ length: newSize }, (_, index) =>
-    index < prevColors.length ? prevColors[index] : chartType === 'bar' || chartType === 'line' ? backgroundColor[0] : '#34baeb'
+    index < prevColors.length ? prevColors[index] : chartType === 'bar' || chartType === 'line' ? backgroundColor[0] : backgroundColor[0]
   )
 );
  
@@ -55,7 +55,7 @@ const handleColorChange = (index, color) => {
 const handleChartTypeChange = (newChartType) => {
   setChartType(newChartType);
   if (newChartType === 'bar' || newChartType === 'line') {
-    setBackgroundColor([initialColors[0]]);
+  setBackgroundColor(Array.from({ length: datasetSize }, () => [initialColors[0]]));
   }
 };
   const fetchChart = async () => {
@@ -114,9 +114,9 @@ const handleChartTypeChange = (newChartType) => {
 Values
   </button>
   <div class="collapse show" id="valuesCollapse">
-  <div class = "card card-body" style= {{backgroundColor: '#282c34', border: '2px solid #ffffff', maxwidth:'80vw'}}>
-        <div  class="btn-group">
-         <button type="button" class="btn btn-primary dropdown-toggle btn-lg"  data-bs-toggle="dropdown"  aria-haspopup="true" aria-expanded="false" >
+  <div class = "card card-body" style= {{backgroundColor: '#282c34', border: '2px solid #ffffff', maxWidth:'80vw'}}>
+        <div  class="btn-group d-flex mx-auto">
+         <button type="button" class="btn btn-primary dropdown-toggle chart-type-btn"  data-bs-toggle="dropdown"  aria-haspopup="true" aria-expanded="false" style={{ width: '5vw', border: '2px solid #ffffff' }}>
    {chartType.charAt(0).toUpperCase() + chartType.slice(1)}
   </button>
   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -178,7 +178,7 @@ Values
 Dataset
   </button>
   <div class="collapse show" id="datasetCollapse">
-  <div class = "card card-body" style= {{backgroundColor: '#282c34', border: '2px solid #ffffff', maxwidth:'80vw'}}>
+  <div class = "card card-body" style= {{backgroundColor: '#282c34', border: '2px solid #ffffff', maxWidth:'80vw'}}>
          <div>
           <label>
             Dataset Size

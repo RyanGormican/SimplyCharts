@@ -12,7 +12,10 @@
     animation: App-logo-spin infinite 20s linear;
   }
 }
-
+.chart-controls{
+    margin:auto;
+    padding-top:10vh;
+}
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -28,6 +31,13 @@
     top: 10px;
     position:fixed;
 }
+
+.chart-type-btn {
+  display: inline-block;
+  justify-content:center;
+  align-items:center;
+}
+
 .links {
   display: flex;
   position: absolute;
