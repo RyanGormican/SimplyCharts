@@ -7,6 +7,7 @@ function App() {
   const [showTitle, setShowTitle] = useState(false);
   const [titleText, setTitleText] = useState('Sample Title');
   const [DataLabel, setDataLabel] = useState('Sample Data Label');
+  const [chartType, setchartType] = useState('bar');
   const [datasetSize, setDatasetSize] = useState(3);
   const [datasetValues, setDatasetValues] = useState(Array.from({ length: datasetSize }, (_, index) => 1));
   const [datasetLabels, setDatasetLabels] = useState(Array.from({ length: datasetSize }, (_, index) => ``));
@@ -41,7 +42,7 @@ setDatasetValues((prevValues) =>
   const fetchChart = async () => {
     try {
       const chartData = {
-        type: 'bar',
+        type: chartType,
         data: {
           labels: datasetLabels,
           datasets: [
@@ -89,6 +90,16 @@ setDatasetValues((prevValues) =>
         SimplyCharts
         </div>
         <div className="chart-controls">
+        <div>
+         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+  {chartType}
+  </button>
+  <div class="dropdown-menu">
+    <a class="dropdown-item" href="#">Bar</a>
+    <a class="dropdown-item" href="#">Pie</a>
+    <a class="dropdown-item" href="#">Line</a>
+  </div>
+        </div>
         <div>
           <label>
             Primary Data Label
