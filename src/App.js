@@ -16,10 +16,22 @@ function App() {
   const [xAxisLabel, setxAxisLabel] = useState('');
   const [datasetValues, setDatasetValues] = useState(Array.from({ length: datasetSize }, (_, index) => 1));
   const [datasetLabels, setDatasetLabels] = useState(Array.from({ length: datasetSize }, (_, index) => ``));
+  const [datasetXValues, setDatasetXValues] = useState(Array.from({ length: datasetSize }, (_, index) => 0));
+const [datasetYValues, setDatasetYValues] = useState(Array.from({ length: datasetSize }, (_, index) => 0));
   const handleSizeChange = (increment) => {
     const newSize = Math.max(1, Math.min(15, datasetSize + increment));
     setDatasetSize(newSize);
 setDatasetValues((prevValues) =>
+    Array.from({ length: newSize }, (_, index) =>
+      index < datasetSize ? prevValues[index] : 1
+    )
+  );
+  setDatasetXValues((prevValues) =>
+    Array.from({ length: newSize }, (_, index) =>
+      index < datasetSize ? prevValues[index] : 1
+    )
+  );
+  setDatasetYValues((prevValues) =>
     Array.from({ length: newSize }, (_, index) =>
       index < datasetSize ? prevValues[index] : 1
     )
@@ -46,6 +58,24 @@ setBackgroundColor((prevColors) =>
     setDatasetValues(newValues);
   }
 };
+const handleXValueChange = (index, value) => {
+  const newXValues = [...datasetXValues];
+  const isValidInput = /^-?\d*\.?\d*$/.test(value);
+  if (isValidInput) {
+    newXValues[index] = value === '' ? '' : parseFloat(value);
+    setDatasetXValues(newXValues);
+  }
+};
+
+const handleYValueChange = (index, value) => {
+  const newYValues = [...datasetYValues];
+  const isValidInput = /^-?\d*\.?\d*$/.test(value);
+  if (isValidInput) {
+    newYValues[index] = value === '' ? '' : parseFloat(value);
+    setDatasetYValues(newYValues);
+  }
+};
+
   const handleLabelChange = (index, label) => {
   const newLabels = [...datasetLabels];
   newLabels[index] = label;
@@ -58,7 +88,7 @@ const handleColorChange = (index, color) => {
 };
 const handleChartTypeChange = (newChartType) => {
   setChartType(newChartType);
- if (newChartType == 'line') {
+ if (newChartType == 'line' || newChartType == 'scatter') {
     setBackgroundColor([backgroundColor[0]]);
   } else {
     setBackgroundColor(Array.from({ length: datasetSize }, () => backgroundColor[0]));
@@ -82,7 +112,10 @@ const fetchChart = async () => {
           {
             backgroundColor: backgroundColor,
             label: DataLabel,
-            data: datasetValues,
+            data:
+                chartType === 'scatter'
+                  ? datasetXValues.map((xValue, index) => ({ x: xValue, y: datasetYValues[index] }))
+                  : datasetValues,
             fill: false,
           },
         ],
@@ -171,7 +204,8 @@ Formation Values
     <a class="dropdown-item"  onClick={() => handleChartTypeChange('bar')}href="#">Vertical Bar</a>
     <a class="dropdown-item"  onClick={() => handleChartTypeChange('horizontalBar')}href="#">Horizontal Bar</a>
     <a class="dropdown-item"  onClick={() => handleChartTypeChange('pie')} href="#">Pie</a>
-    <a class="dropdown-item"  onClick={() => handleChartTypeChange('line')}href="#">Line</a><
+    <a class="dropdown-item"  onClick={() => handleChartTypeChange('line')}href="#">Line</a>
+    <a class="dropdown-item"  onClick={() => handleChartTypeChange('scatter')}href="#">Scatter</a><
   /div>
         </div>
           <div>
@@ -284,6 +318,8 @@ Dataset Values
           </label>
           </div>
           <div class="dataset">
+          {chartType!= 'scatter'?(
+          <div class="dataset">
           {datasetValues.map((value, index) => (
             <label key={index}>
               Value {index + 1}
@@ -297,6 +333,41 @@ Dataset Values
             </label>
           ))}
           </div>
+          ) : ( 
+          <div>
+          <div  class="dataset">
+          {datasetXValues.map((xValue, index) => (
+  <label key={index}>
+    X-Value {index + 1}
+    <input
+      type="number"
+      step="any"
+      value={xValue === '' ? '' : xValue}
+      onChange={(e) => handleXValueChange(index, e.target.value)}
+      className="small-input"
+    />
+  </label>
+))}
+</div>
+<div class="dataset">
+{datasetYValues.map((yValue, index) => (
+  <label key={index}>
+    Y-Value {index + 1}
+    <input
+      type="number"
+      step="any"
+      value={yValue === '' ? '' : yValue}
+      onChange={(e) => handleYValueChange(index, e.target.value)}
+      className="small-input"
+    />
+  </label>
+))}
+</div>
+</div>
+)}
+          </div>
+          <div class="dataset">
+          { chartType != 'scatter' ? (
           <div class="dataset">
           {datasetValues.map((value, index) => (
   <label key={index}>
@@ -308,6 +379,9 @@ Dataset Values
     />
   </label>
 ))}
+</div>
+):("")
+}
           </div>
           <div>
            {chartType === 'pie' && (
