@@ -109,7 +109,7 @@ const handleChartTypeChange = (newChartType) => {
       setShowXAxis(true);
         setShowYAxis(true);
   }
-  if (newChartType == 'pie'){
+  if (newChartType == 'pie' || newChartType == 'polarArea' || newChartType == 'doughnut' || newChartType == 'radar'){
         setyAxisLabel('');
         setxAxisLabel('');
         setShowXAxis(false);
@@ -124,8 +124,8 @@ const fetchChart = async () => {
         labels: datasetLabels,
       datasets: [
           {
-            borderColor: chartType === 'scatter' ? [backgroundColor[0]] : backgroundColor,
-            backgroundColor: chartType === 'scatter' ? [backgroundColor[0]] : backgroundColor,
+            borderColor: chartType === 'scatter' || chartType === 'radar' ? [backgroundColor[0]] : backgroundColor,
+            backgroundColor: chartType === 'scatter' || chartType === 'radar' ? [backgroundColor[0]] : backgroundColor,
             label: DataLabel,
             data: chartType === 'scatter'
               ? datasetXValues.map((xValue, index) => ({
@@ -134,17 +134,18 @@ const fetchChart = async () => {
                   r: datasetRadius[index], 
                 }))
               : chartType === 'bubble' 
-              ? datasetValues.map((value, index) => ({
-                  x: value,
+              ? datasetXValues.map((xValue, index) => ({
+                  x: xValue,
                   y: datasetYValues[index],
                   r: datasetRadius[index],
                 }))
               : datasetValues,
-            fill: false,
+            fill: chartType == 'radar' ? 'origin' : 'false',
           },
         ],
       },
       options: {
+          spanGaps: false,
         title: {
           display: showTitle,
           text: titleText,
@@ -211,9 +212,17 @@ Formation Values
   <div class = "card card-body d-flex mx-auto" style= {{backgroundColor: '#282c34', border: '2px solid #ffffff', maxWidth:'80vw'}}>
         <div  class="btn-group d-flex mx-auto">
          <button type="button" class="btn btn-primary dropdown-toggle chart-type-btn"  data-bs-toggle="dropdown"  aria-haspopup="true" aria-expanded="false" style={{ width: '5vw', border: '2px solid #ffffff' }}>
-      {chartType !== 'bar' && chartType !== 'horizontalBar' ? (
+      {chartType !== 'bar' && chartType !== 'horizontalBar'  ? (
+      <div> 
+      {chartType === 'polarArea' ? (
+        <div>
+        <p> Polar </p>
+        </div>
+        ) : (
       <div>
          {chartType.charAt(0).toUpperCase() + chartType.slice(1)}
+      </div>
+      )}
       </div>
       ) : (
       <div>
@@ -233,6 +242,9 @@ Formation Values
     <a class="dropdown-item"  onClick={() => handleChartTypeChange('line')}href="#">Line</a>
     <a class="dropdown-item"  onClick={() => handleChartTypeChange('scatter')}href="#">Scatter</a>
     <a class="dropdown-item"  onClick={() => handleChartTypeChange('bubble')}href="#">Bubble</a>
+    <a class="dropdown-item"  onClick={() => handleChartTypeChange('polarArea')}href="#">Polar</a>
+    <a class="dropdown-item"  onClick={() => handleChartTypeChange('doughnut')}href="#">Doughnut</a>
+    <a class="dropdown-item"  onClick={() => handleChartTypeChange('radar')}href="#">Radar</a>
     </div>
         </div>
           <div>
@@ -255,8 +267,9 @@ Formation Values
             </label>
           )}
           </div>
-     {chartType !== 'pie' ? (
+     {chartType !== 'pie' && chartType !== 'polarArea'  && chartType !== 'doughnut' ? (
   <div>
+     {chartType !== 'radar' ? (
   <div>
   <div>
     <label>
@@ -298,6 +311,7 @@ Formation Values
       </label>
     )}
     </div>
+    ){("")}
     <div>
     <label>
       Primary Data Label
@@ -345,7 +359,7 @@ Dataset Values
           </label>
           </div>
           <div class="dataset">
-          {chartType!= 'scatter'?(
+          {chartType!= 'scatter' && chartType!= 'bubble'?(
           <div class="dataset">
           {datasetValues.map((value, index) => (
             <label key={index}>
@@ -411,7 +425,7 @@ Dataset Values
 )}
 
           <div class="dataset">
-          { chartType != 'scatter' ? (
+          { chartType != 'scatter' && chartType != 'bubble' ? (
           <div class="dataset">
           {datasetValues.map((value, index) => (
   <label key={index}>
@@ -428,7 +442,7 @@ Dataset Values
 }
           </div>
           <div>
-           {chartType === 'pie' && (
+           {chartType === 'pie' || chartType === 'polarArea' || chartType === 'doughnut'? (
           <div className="dataset">
             {backgroundColor.map((color, index) => (
               <label key={index}>
@@ -441,7 +455,7 @@ Dataset Values
               </label>
             ))}
           </div>
-        )}
+        ) : ("" )}
           </div>
           </div>
         </div>
