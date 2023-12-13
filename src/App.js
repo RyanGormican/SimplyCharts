@@ -47,7 +47,6 @@ setBackgroundColor((prevColors) =>
     index < prevColors.length ? prevColors[index] : chartType === 'bar' || chartType === 'horizontalBar' ? backgroundColor[0] : ''
   )
 );
- 
   };
 
   const handleValueChange = (index, value) => {
@@ -110,12 +109,12 @@ const fetchChart = async () => {
         labels: datasetLabels,
         datasets: [
           {
-            backgroundColor: backgroundColor,
+            borderColor: chartType === 'scatter' ? [backgroundColor[0]] : backgroundColor,
+            backgroundColor: chartType === 'scatter' ? [backgroundColor[0]] : backgroundColor,
             label: DataLabel,
-            data:
-                chartType === 'scatter'
-                  ? datasetXValues.map((xValue, index) => ({ x: xValue, y: datasetYValues[index] }))
-                  : datasetValues,
+            data: chartType === 'scatter'
+              ? datasetXValues.map((xValue, index) => ({ x: xValue, y: datasetYValues[index] }))
+              : datasetValues,
             fill: false,
           },
         ],
@@ -141,7 +140,7 @@ const fetchChart = async () => {
               scaleLabel: {
                 display: true,
                 labelString: yAxisLabel,
-                },
+              },
             },
           ],
         },
@@ -159,6 +158,8 @@ const fetchChart = async () => {
     console.error('Error fetching chart data:', error);
   }
 };
+
+
 
   return (
     <div className="App">
