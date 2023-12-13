@@ -18,6 +18,8 @@ function App() {
   const [datasetLabels, setDatasetLabels] = useState(Array.from({ length: datasetSize }, (_, index) => ``));
   const [datasetXValues, setDatasetXValues] = useState(Array.from({ length: datasetSize }, (_, index) => 0));
 const [datasetYValues, setDatasetYValues] = useState(Array.from({ length: datasetSize }, (_, index) => 0));
+const [datasetRadius, setDatasetRadius] = useState(Array.from({ length: datasetSize }, (_, index) => 5));
+
   const handleSizeChange = (increment) => {
     const newSize = Math.max(1, Math.min(15, datasetSize + increment));
     setDatasetSize(newSize);
@@ -32,6 +34,11 @@ setDatasetValues((prevValues) =>
     )
   );
   setDatasetYValues((prevValues) =>
+    Array.from({ length: newSize }, (_, index) =>
+      index < datasetSize ? prevValues[index] : 1
+    )
+  );
+    setDatasetRadius((prevValues) =>
     Array.from({ length: newSize }, (_, index) =>
       index < datasetSize ? prevValues[index] : 1
     )
@@ -74,6 +81,14 @@ const handleYValueChange = (index, value) => {
     setDatasetYValues(newYValues);
   }
 };
+const handleRadiusChange = (index, value) => {
+  const newRadiusValues = [...datasetRadius];
+  const isValidInput = /^-?\d*\.?\d*$/.test(value);
+  if (isValidInput) {
+    newRadiusValues[index] = value === '' ? '' : parseFloat(value);
+    setDatasetRadius(newRadiusValues);
+  }
+};
 
   const handleLabelChange = (index, label) => {
   const newLabels = [...datasetLabels];
@@ -107,13 +122,23 @@ const fetchChart = async () => {
       type: chartType,
       data: {
         labels: datasetLabels,
-        datasets: [
+      datasets: [
           {
             borderColor: chartType === 'scatter' ? [backgroundColor[0]] : backgroundColor,
             backgroundColor: chartType === 'scatter' ? [backgroundColor[0]] : backgroundColor,
             label: DataLabel,
             data: chartType === 'scatter'
-              ? datasetXValues.map((xValue, index) => ({ x: xValue, y: datasetYValues[index] }))
+              ? datasetXValues.map((xValue, index) => ({
+                  x: xValue,
+                  y: datasetYValues[index],
+                  r: datasetRadius[index], 
+                }))
+              : chartType === 'bubble' 
+              ? datasetValues.map((value, index) => ({
+                  x: value,
+                  y: datasetYValues[index],
+                  r: datasetRadius[index],
+                }))
               : datasetValues,
             fill: false,
           },
@@ -206,8 +231,9 @@ Formation Values
     <a class="dropdown-item"  onClick={() => handleChartTypeChange('horizontalBar')}href="#">Horizontal Bar</a>
     <a class="dropdown-item"  onClick={() => handleChartTypeChange('pie')} href="#">Pie</a>
     <a class="dropdown-item"  onClick={() => handleChartTypeChange('line')}href="#">Line</a>
-    <a class="dropdown-item"  onClick={() => handleChartTypeChange('scatter')}href="#">Scatter</a><
-  /div>
+    <a class="dropdown-item"  onClick={() => handleChartTypeChange('scatter')}href="#">Scatter</a>
+    <a class="dropdown-item"  onClick={() => handleChartTypeChange('bubble')}href="#">Bubble</a>
+    </div>
         </div>
           <div>
           <label>
@@ -367,6 +393,23 @@ Dataset Values
 </div>
 )}
           </div>
+          {chartType === 'bubble' && (
+  <div class="dataset">
+    {datasetRadius.map((radius, index) => (
+      <label key={index}>
+        Radius {index + 1}
+        <input
+          type="number"
+          step="any"
+          value={radius === '' ? '' : radius}
+          onChange={(e) => handleRadiusChange(index, e.target.value)}
+          className="small-input"
+        />
+      </label>
+    ))}
+  </div>
+)}
+
           <div class="dataset">
           { chartType != 'scatter' ? (
           <div class="dataset">
