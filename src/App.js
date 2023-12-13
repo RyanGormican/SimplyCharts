@@ -89,6 +89,32 @@ const handleRadiusChange = (index, value) => {
     setDatasetRadius(newRadiusValues);
   }
 };
+const hexToRgb = (hex) => {
+  hex = hex.replace(/^#/, '');
+  const bigint = parseInt(hex, 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+
+  return `${r},${g},${b}`;
+};
+const hexToRgbA = (hexArray,alpha) => {
+return hexArray.map((hex) => {
+    hex = hex.replace(/^#/, '');
+    const bigint = parseInt(hex, 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    return `rgba(${r},${g},${b},${alpha})`;
+  });
+};
+
+const datasetBackgroundColor =
+  chartType === 'scatter'
+    ? backgroundColor[0]
+    : chartType === 'radar' || chartType === 'polarArea'
+    ? `rgba(${hexToRgb(backgroundColor[0])}, 0.5)`
+    : backgroundColor;
 
   const handleLabelChange = (index, label) => {
   const newLabels = [...datasetLabels];
@@ -125,13 +151,12 @@ const fetchChart = async () => {
       datasets: [
           {
             borderColor: chartType === 'scatter' || chartType === 'radar' ? [backgroundColor[0]] : backgroundColor,
-            backgroundColor: chartType === 'scatter' || chartType === 'radar' ? [backgroundColor[0]] : backgroundColor,
+            backgroundColor: chartType === 'scatter' ? backgroundColor[0] : (chartType === 'radar') ? `rgba(${hexToRgb(backgroundColor[0])}, 0.5)` : (chartType === 'polarArea')? hexToRgbA(backgroundColor,0.5) : backgroundColor,
             label: DataLabel,
             data: chartType === 'scatter'
               ? datasetXValues.map((xValue, index) => ({
                   x: xValue,
                   y: datasetYValues[index],
-                  r: datasetRadius[index], 
                 }))
               : chartType === 'bubble' 
               ? datasetXValues.map((xValue, index) => ({
@@ -145,7 +170,6 @@ const fetchChart = async () => {
         ],
       },
       options: {
-          spanGaps: false,
         title: {
           display: showTitle,
           text: titleText,
@@ -267,62 +291,62 @@ Formation Values
             </label>
           )}
           </div>
-     {chartType !== 'pie' && chartType !== 'polarArea'  && chartType !== 'doughnut' ? (
+{chartType !== 'pie' && chartType !== 'polarArea' && chartType !== 'doughnut' ? (
   <div>
-     {chartType !== 'radar' ? (
-  <div>
-  <div>
-    <label>
-      Y-Axis
-      <input
-        type="checkbox"
-        checked={showYAxis}
-        onChange={() => setShowYAxis(!showYAxis)}
-      />
-    </label>
+    {chartType !== 'radar' && (
+      <div>
+        <div>
+          <label>
+            Y-Axis
+            <input
+              type="checkbox"
+              checked={showYAxis}
+              onChange={() => setShowYAxis(!showYAxis)}
+            />
+          </label>
 
-    {showYAxis && (
+          {showYAxis && (
+            <label>
+              <input
+                type="text"
+                value={yAxisLabel}
+                onChange={(e) => setyAxisLabel(e.target.value)}
+              />
+            </label>
+          )}
+        </div>
+        <div>
+          <label>
+            X-Axis
+            <input
+              type="checkbox"
+              checked={showXAxis}
+              onChange={() => setShowXAxis(!showXAxis)}
+            />
+          </label>
+
+          {showXAxis && (
+            <label>
+              <input
+                type="text"
+                value={xAxisLabel}
+                onChange={(e) => setxAxisLabel(e.target.value)}
+              />
+            </label>
+          )}
+        </div>
+      </div>
+    )}
+    <div>
       <label>
+        Primary Data Label
         <input
           type="text"
-          value={yAxisLabel}
-          onChange={(e) => setyAxisLabel(e.target.value)}
+          value={DataLabel}
+          onChange={(e) => setDataLabel(e.target.value)}
         />
       </label>
-    )}
     </div>
-    <div>
-    <label>
-      X-Axis
-      <input
-        type="checkbox"
-        checked={showXAxis}
-        onChange={() => setShowXAxis(!showXAxis)}
-      />
-    </label>
-
-    {showXAxis && (
-      <label>
-        <input
-          type="text"
-          value={xAxisLabel}
-          onChange={(e) => setxAxisLabel(e.target.value)}
-        />
-      </label>
-    )}
-    </div>
-    ){("")}
-    <div>
-    <label>
-      Primary Data Label
-      <input
-        type="text"
-        value={DataLabel}
-        onChange={(e) => setDataLabel(e.target.value)}
-      />
-    </label>
-</div>
-
 
     <label>
       Primary Data Color
@@ -331,13 +355,17 @@ Formation Values
         value={backgroundColor[0]}
         onChange={(e) => {
           const newColor = e.target.value;
-          setBackgroundColor(Array.from({ length: datasetSize }, () => newColor));
+          setBackgroundColor(
+            Array.from({ length: datasetSize }, () => newColor)
+          );
         }}
       />
     </label>
-    </div>
   </div>
 ) : null}
+
+
+
 
         </div>
         </div>
