@@ -165,7 +165,7 @@ const fetchChart = async () => {
                   r: datasetRadius[index],
                 }))
               : datasetValues,
-            fill: chartType == 'radar' ? 'origin' : 'false',
+            fill: chartType == 'radar' ? 'origin' : false,
           },
         ],
       },
@@ -483,7 +483,7 @@ Dataset Values
               </label>
             ))}
           </div>
-        ) : ("" )}
+        ) : ("")}
           </div>
           </div>
         </div>
