@@ -9,6 +9,7 @@ function App() {
   const [backgroundColor, setBackgroundColor] = useState(initialColors.slice(0, datasetSize));
   const [titleText, setTitleText] = useState('Sample Title');
   const [DataLabel, setDataLabel] = useState('Sample Data Label');
+  const [legendPosition, setLegendPosition] = useState('top');
   const [chartType, setChartType] = useState('bar');
   const [showYAxis, setShowYAxis] = useState(true);
   const [showXAxis, setShowXAxis] = useState(true);
@@ -170,6 +171,9 @@ const fetchChart = async () => {
         ],
       },
       options: {
+      legend: {
+      position: legendPosition,
+      },
         title: {
           display: showTitle,
           text: titleText,
@@ -232,9 +236,11 @@ const fetchChart = async () => {
            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#valuesCollapse" aria-expanded="false" aria-controls="datasetCollapse" style={{ width: '80vw',border: '2px solid #ffffff'}}>
 Formation Values
   </button>
+
   <div class="collapse show" id="valuesCollapse">
   <div class = "card card-body d-flex mx-auto" style= {{backgroundColor: '#282c34', border: '2px solid #ffffff', maxWidth:'80vw'}}>
         <div  class="btn-group d-flex mx-auto">
+        Chart Type 
          <button type="button" class="btn btn-primary dropdown-toggle chart-type-btn"  data-bs-toggle="dropdown"  aria-haspopup="true" aria-expanded="false" style={{ width: '5vw', border: '2px solid #ffffff' }}>
       {chartType !== 'bar' && chartType !== 'horizontalBar'  ? (
       <div> 
@@ -291,6 +297,19 @@ Formation Values
             </label>
           )}
           </div>
+<div>
+Legend Position
+    <button type="button" class="btn btn-primary dropdown-toggle chart-type-btn"  data-bs-toggle="dropdown"  aria-haspopup="true" aria-expanded="false" style={{ width: '5vw', border: '2px solid #ffffff' }}>
+  {legendPosition.charAt(0).toUpperCase() + legendPosition.slice(1)}
+      
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <a class="dropdown-item"  onClick={() => setLegendPosition('top')}href="#">Top</a>
+    <a class="dropdown-item"  onClick={() => setLegendPosition('left')}href="#">Left</a>
+    <a class="dropdown-item"  onClick={() => setLegendPosition('right')}href="#">Right</a>
+    <a class="dropdown-item"  onClick={() => setLegendPosition('bottom')}href="#">Bottom</a>
+    </div>
+        </div>        
 {chartType !== 'pie' && chartType !== 'polarArea' && chartType !== 'doughnut' ? (
   <div>
     {chartType !== 'radar' && (
