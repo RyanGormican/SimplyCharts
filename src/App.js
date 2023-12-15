@@ -559,7 +559,6 @@ Chart
               Create Chart
             </button>
           </div>
-
         <div class="carousel slide" id="chartCarousel" data-bs-ride="carousel" ref={carouselRef}>
 <div class="carousel-inner">
   {chartData.map((chartUrl, index) => (
