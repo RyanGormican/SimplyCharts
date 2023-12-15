@@ -1,20 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import './App.css';
 import { Icon } from '@iconify/react';
 function App() {
-  const [chartData, setChartData] = useState(null);
+  const [chartData, setChartData] = useState([]);
   const [showTitle, setShowTitle] = useState(false);
   const [datasetSize, setDatasetSize] = useState(3);
   const initialColors = ['#34baeb', '#34baec', '#34baed']; 
   const [backgroundColor, setBackgroundColor] = useState(initialColors.slice(0, datasetSize));
   const [titleText, setTitleText] = useState('Sample Title');
-  const [DataLabel, setDataLabel] = useState('Sample Data Label');
+  const [DataLabel, setDataLabel] = useState('Sample Label');
   const [legendPosition, setLegendPosition] = useState('top');
   const [chartType, setChartType] = useState('bar');
   const [showYAxis, setShowYAxis] = useState(true);
   const [showXAxis, setShowXAxis] = useState(true);
   const [yAxisLabel, setyAxisLabel] = useState('');
   const [xAxisLabel, setxAxisLabel] = useState('');
+    const carouselRef = useRef(null); 
+    const [activeChartIndex, setActiveChartIndex] = useState(0);
+
   const [datasetValues, setDatasetValues] = useState(Array.from({ length: datasetSize }, (_, index) => 1));
   const [datasetLabels, setDatasetLabels] = useState(Array.from({ length: datasetSize }, (_, index) => ``));
   const [datasetXValues, setDatasetXValues] = useState(Array.from({ length: datasetSize }, (_, index) => 0));
@@ -217,7 +220,8 @@ const fetchChart = async () => {
     const response = await fetch(apiUrl);
     const blob = await response.blob();
     const imageUrl = URL.createObjectURL(blob);
-    setChartData(imageUrl);
+    setChartData((prevChartData) => [...prevChartData, imageUrl]);
+  carouselRef.current.to(chartData.length);
   } catch (error) {
     console.error('Error fetching chart data:', error);
   }
@@ -556,11 +560,25 @@ Chart
             </button>
           </div>
 
-          {chartData && (
-            <div className="chart-container">
-              <img src={chartData} alt="Chart" />
-            </div>
-          )}
+        <div class="carousel slide" id="chartCarousel" data-bs-ride="carousel" ref={carouselRef}>
+<div class="carousel-inner">
+  {chartData.map((chartUrl, index) => (
+    <div key={index} class={`carousel-item ${index === 0 ? 'active' : ''}`}>
+      <img src={chartUrl} class="d-block w-100" alt={`Chart ${index + 1}`} />
+    </div>
+  ))}
+</div>
+
+  <button class="carousel-control-prev" type="button" data-bs-target="#chartCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#chartCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+
         </div>
         </div>
         </div>
