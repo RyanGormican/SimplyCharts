@@ -21,6 +21,7 @@ function App() {
 const [datasetYValues, setDatasetYValues] = useState(Array.from({ length: datasetSize }, (_, index) => 0));
 const [datasetRadius, setDatasetRadius] = useState(Array.from({ length: datasetSize }, (_, index) => 5));
 const [showDataLabels, setShowDataLabels] = useState(false);
+const [dataLabelsAlignment, setDataLabelsAlignment] = useState('center');
   const handleSizeChange = (increment) => {
     const newSize = Math.max(1, Math.min(15, datasetSize + increment));
     setDatasetSize(newSize);
@@ -180,7 +181,8 @@ const fetchChart = async () => {
         },
         plugins: {
             datalabels: {
-               display: showDataLabels
+               display: showDataLabels,
+               align : dataLabelsAlignment,
             }
         },
         scales: {
@@ -200,6 +202,9 @@ const fetchChart = async () => {
                 display: true,
                 labelString: yAxisLabel,
               },
+              ticks: {
+            beginAtZero: true,
+          },
             },
           ],
         },
@@ -311,6 +316,24 @@ Formation Values
               onChange={() => setShowDataLabels(!showDataLabels)}
             />
           </label>
+               {showDataLabels && (
+     <div>
+Data Labels Alignment
+    <button type="button" class="btn btn-primary dropdown-toggle chart-type-btn"  data-bs-toggle="dropdown"  aria-haspopup="true" aria-expanded="false" style={{ width: '5vw', border: '2px solid #ffffff' }}>
+  {dataLabelsAlignment.charAt(0).toUpperCase() + dataLabelsAlignment.slice(1)}
+      
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <a class="dropdown-item"  onClick={() => setDataLabelsAlignment('top')}href="#">Top</a>
+    <a class="dropdown-item"  onClick={() => setDataLabelsAlignment('left')}href="#">Left</a>
+    <a class="dropdown-item"  onClick={() => setDataLabelsAlignment('right')}href="#">Right</a>
+    <a class="dropdown-item"  onClick={() => setDataLabelsAlignment('bottom')}href="#">Bottom</a>
+    <a class="dropdown-item"  onClick={() => setDataLabelsAlignment('center')}href="#">Center</a>
+    <a class="dropdown-item"  onClick={() => setDataLabelsAlignment('start')}href="#">Start</a>
+    <a class="dropdown-item"  onClick={() => setDataLabelsAlignment('end')}href="#">End</a>
+    </div>
+        </div>        
+          )}
 
           </div>
 <div>
@@ -522,8 +545,13 @@ Dataset Values
           </div>
           </div>
         </div>
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#chartCollapse" aria-expanded="false" aria-controls="datasetCollapse" style={{ width: '80vw',border: '2px solid #ffffff'}}>
+Chart
+  </button>
+  <div class="collapse show" id="chartCollapse">
+  <div class = "card card-body  d-flex mx-auto" style= {{backgroundColor: '#282c34', border: '2px solid #ffffff', maxWidth:'80vw'}}>
           <div className="button-container">
-            <button type="button" className="btn btn-primary" onClick={fetchChart}>
+            <button type="button" className="btn btn-primary" onClick={fetchChart} style={{ width: '10vw',border: '2px solid #ffffff'}}>
               Create Chart
             </button>
           </div>
@@ -533,6 +561,8 @@ Dataset Values
               <img src={chartData} alt="Chart" />
             </div>
           )}
+        </div>
+        </div>
         </div>
       </header>
     </div>
