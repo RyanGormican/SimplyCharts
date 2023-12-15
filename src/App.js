@@ -20,7 +20,7 @@ function App() {
   const [datasetXValues, setDatasetXValues] = useState(Array.from({ length: datasetSize }, (_, index) => 0));
 const [datasetYValues, setDatasetYValues] = useState(Array.from({ length: datasetSize }, (_, index) => 0));
 const [datasetRadius, setDatasetRadius] = useState(Array.from({ length: datasetSize }, (_, index) => 5));
-
+const [showDataLabels, setShowDataLabels] = useState(false);
   const handleSizeChange = (increment) => {
     const newSize = Math.max(1, Math.min(15, datasetSize + increment));
     setDatasetSize(newSize);
@@ -129,14 +129,14 @@ const handleColorChange = (index, color) => {
 };
 const handleChartTypeChange = (newChartType) => {
   setChartType(newChartType);
- if (newChartType == 'line' || newChartType == 'scatter') {
+ if (newChartType === 'line' || newChartType === 'scatter') {
     setBackgroundColor([backgroundColor[0]]);
   } else {
     setBackgroundColor(Array.from({ length: datasetSize }, () => backgroundColor[0]));
       setShowXAxis(true);
         setShowYAxis(true);
   }
-  if (newChartType == 'pie' || newChartType == 'polarArea' || newChartType == 'doughnut' || newChartType == 'radar'){
+  if (newChartType === 'pie' || newChartType === 'polarArea' || newChartType === 'doughnut' || newChartType === 'radar'){
         setyAxisLabel('');
         setxAxisLabel('');
         setShowXAxis(false);
@@ -166,7 +166,7 @@ const fetchChart = async () => {
                   r: datasetRadius[index],
                 }))
               : datasetValues,
-            fill: chartType == 'radar' ? 'origin' : false,
+            fill: chartType === 'radar' ? 'origin' : false,
           },
         ],
       },
@@ -177,6 +177,11 @@ const fetchChart = async () => {
         title: {
           display: showTitle,
           text: titleText,
+        },
+        plugins: {
+            datalabels: {
+               display: showDataLabels
+            }
         },
         scales: {
           xAxes: [
@@ -297,6 +302,17 @@ Formation Values
             </label>
           )}
           </div>
+          <div>
+           <label>
+            Data Labels
+            <input
+              type="checkbox"
+              checked={showDataLabels}
+              onChange={() => setShowDataLabels(!showDataLabels)}
+            />
+          </label>
+
+          </div>
 <div>
 Legend Position
     <button type="button" class="btn btn-primary dropdown-toggle chart-type-btn"  data-bs-toggle="dropdown"  aria-haspopup="true" aria-expanded="false" style={{ width: '5vw', border: '2px solid #ffffff' }}>
@@ -358,7 +374,7 @@ Legend Position
     )}
     <div>
       <label>
-        Primary Data Label
+        Primary Label
         <input
           type="text"
           value={DataLabel}
@@ -368,7 +384,7 @@ Legend Position
     </div>
 
     <label>
-      Primary Data Color
+      Primary Color
       <input
         type="color"
         value={backgroundColor[0]}
@@ -406,7 +422,7 @@ Dataset Values
           </label>
           </div>
           <div class="dataset">
-          {chartType!= 'scatter' && chartType!= 'bubble'?(
+          {chartType !== 'scatter' && chartType!== 'bubble'?(
           <div class="dataset">
           {datasetValues.map((value, index) => (
             <label key={index}>
@@ -472,7 +488,7 @@ Dataset Values
 )}
 
           <div class="dataset">
-          { chartType != 'scatter' && chartType != 'bubble' ? (
+          { chartType !== 'scatter' && chartType !== 'bubble' ? (
           <div class="dataset">
           {datasetValues.map((value, index) => (
   <label key={index}>
