@@ -15,6 +15,7 @@ function App() {
   const [showXAxis, setShowXAxis] = useState(true);
   const [yAxisLabel, setyAxisLabel] = useState('');
   const [xAxisLabel, setxAxisLabel] = useState('');
+  const [globalFontSize, setGlobalFontSize] = useState('12');
     const carouselRef = useRef(null); 
     const [activeChartIndex, setActiveChartIndex] = useState(0);
 
@@ -181,11 +182,16 @@ const fetchChart = async () => {
         title: {
           display: showTitle,
           text: titleText,
+         fontSize: globalFontSize,
         },
         plugins: {
             datalabels: {
                display: showDataLabels,
                align : dataLabelsAlignment,
+                      font: {
+          weight: 'normal',
+          size: globalFontSize,
+        },
             }
         },
         scales: {
@@ -195,6 +201,7 @@ const fetchChart = async () => {
               scaleLabel: {
                 display: true,
                 labelString: xAxisLabel,
+                fontSize: globalFontSize
               },
             },
           ],
@@ -204,6 +211,7 @@ const fetchChart = async () => {
               scaleLabel: {
                 display: true,
                 labelString: yAxisLabel,
+                fontSize: globalFontSize
               },
               ticks: {
             beginAtZero: true,
@@ -352,7 +360,19 @@ Legend Position
     <a class="dropdown-item"  onClick={() => setLegendPosition('right')}href="#">Right</a>
     <a class="dropdown-item"  onClick={() => setLegendPosition('bottom')}href="#">Bottom</a>
     </div>
-        </div>        
+        </div>   
+    <div>
+    Font Size
+     <input
+                type="number"
+                step="any"
+                min="0.1"
+                max="100"
+                value={globalFontSize}
+                onChange={(e) => setGlobalFontSize(e.target.value)}
+                className="small-input"
+              />
+    </div>
 {chartType !== 'pie' && chartType !== 'polarArea' && chartType !== 'doughnut' ? (
   <div>
     {chartType !== 'radar' && (
