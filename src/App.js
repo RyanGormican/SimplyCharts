@@ -182,9 +182,6 @@ const fetchChart = async () => {
       options: {
       legend: {
       position: legendPosition,
-      labels: {
-        fontSize: globalFontSize
-      }
       },
         title: {
           display: showTitle,
@@ -368,18 +365,6 @@ Legend Position
     <a class="dropdown-item"  onClick={() => setLegendPosition('bottom')}href="#">Bottom</a>
     </div>
         </div>   
-    <div>
-    Font Size
-     <input
-                type="number"
-                step="any"
-                min="1"
-                max="30"
-                value={globalFontSize}
-                onChange={(e) => setGlobalFontSize(e.target.value)}
-                className="small-input"
-              />
-    </div>
 {chartType !== 'pie' && chartType !== 'polarArea' && chartType !== 'doughnut' ? (
   <div>
     {chartType !== 'radar' && (
