@@ -15,7 +15,7 @@ function App() {
   const [showXAxis, setShowXAxis] = useState(true);
   const [yAxisLabel, setyAxisLabel] = useState('');
   const [xAxisLabel, setxAxisLabel] = useState('');
-  const [globalFontSize, setGlobalFontSize] = useState('12');
+  const [globalFontSize, setGlobalFontSize] = useState(12);
     const carouselRef = useRef(null); 
     const [activeChartIndex, setActiveChartIndex] = useState(0);
 
@@ -172,12 +172,19 @@ const fetchChart = async () => {
                 }))
               : datasetValues,
             fill: chartType === 'radar' ? 'origin' : false,
+                font: {
+          weight: 'normal',
+          size: globalFontSize,
+          },
           },
         ],
       },
       options: {
       legend: {
       position: legendPosition,
+      labels: {
+        fontSize: globalFontSize
+      }
       },
         title: {
           display: showTitle,
@@ -366,8 +373,8 @@ Legend Position
      <input
                 type="number"
                 step="any"
-                min="0.1"
-                max="100"
+                min="1"
+                max="30"
                 value={globalFontSize}
                 onChange={(e) => setGlobalFontSize(e.target.value)}
                 className="small-input"
