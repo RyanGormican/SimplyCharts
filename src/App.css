@@ -14,7 +14,6 @@
 }
 .chart-controls{
     margin:auto;
-    padding-top:10vh;
 }
 .App-header {
   background-color: #282c34;
@@ -44,7 +43,7 @@
   top: 10px;
   right: 15px;
   height: 10vh; 
-  z-index:5;
+  z-index:15;
 
 }
 .dataset{

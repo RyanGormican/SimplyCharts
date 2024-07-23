@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import './App.css';
 import { Icon } from '@iconify/react';
+import Feedback from './components/Feedback/Feedback';
 function App() {
   const [chartData, setChartData] = useState([]);
   const [showTitle, setShowTitle] = useState(false);
@@ -18,7 +19,7 @@ function App() {
   const [globalFontSize, setGlobalFontSize] = useState(12);
     const carouselRef = useRef(null); 
     const [activeChartIndex, setActiveChartIndex] = useState(0);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [datasetValues, setDatasetValues] = useState(Array.from({ length: datasetSize }, (_, index) => 1));
   const [datasetLabels, setDatasetLabels] = useState(Array.from({ length: datasetSize }, (_, index) => ``));
   const [datasetXValues, setDatasetXValues] = useState(Array.from({ length: datasetSize }, (_, index) => 0));
@@ -241,8 +242,14 @@ const fetchChart = async () => {
 
 
 
+  const toggleFeedbackModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
   return (
     <div className="App">
+         {isModalOpen && (
+          <Feedback  isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
+          )}
       <header className="App-header">
         <div className="links">
           <a href="https://www.linkedin.com/in/ryangormican/">
@@ -253,11 +260,15 @@ const fetchChart = async () => {
           </a>
           <a href="https://ryangormicanportfoliohub.vercel.app/">
             <Icon icon="teenyicons:computer-outline" color="#199c35" width="60" />
-          </a>
+          </a> 
+         <div className="cursor-pointer" onClick={() => toggleFeedbackModal()}>
+          <Icon icon="material-symbols:feedback"  width="60" />
+        </div>
         </div>
         <div className="title">
-        SimplyCharts
+        SimplyCharts  
         </div>
+        <Icon icon="mdi:chart-line" width="100"/>
         <div className="chart-controls">
            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#valuesCollapse" aria-expanded="false" aria-controls="datasetCollapse" style={{ width: '80vw',border: '2px solid #ffffff'}}>
 Formation Values
